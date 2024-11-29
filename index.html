@@ -66,6 +66,7 @@
             padding: 15px;
             border-radius: 5px;
             color: #333;
+            display: none; /* Hide initially */
         }
 
         .error {
@@ -79,7 +80,6 @@
         .success {
             color: green;
         }
-
     </style>
 </head>
 <body>
@@ -88,64 +88,45 @@
         <form id="studentForm">
             <input type="text" id="lastName" placeholder="Last Name" required>
             <input type="text" id="firstName" placeholder="First Name" required>
-            <input type="date" id="birthday" placeholder="Birthday" required>
+            <input type="date" id="birthday" required>
             <button type="submit">Check Grade</button>
         </form>
         <p id="result"></p>
     </div>
 
     <script>
-        // Sample student data (replace with real data or an API call)
+        // Sample student data
         const studentsData = [
-            {
-                "firstName": "Angelo",
-                "lastName": "Abaquita",
-                "birthday": "2000-01-01",
-                "grade": "3.5"
-            },
-            {
-                "firstName": "Pamela",
-                "lastName": "Arellano",
-                "birthday": "2000-02-02",
-                "grade": "4.5"
-            },
-            {
-                "firstName": "Carl",
-                "lastName": "Salapar",
-                "birthday": "1999-04-15",
-                "grade": "4.0"
-            },
-            {
-                "firstName": "Anne",
-                "lastName": "Salapar",
-                "birthday": "1998-11-23",
-                "grade": "5.0"
-            }
+            { "firstName": "Angelo", "lastName": "Abaquita", "birthday": "2000-01-01", "grade": "3.5" },
+            { "firstName": "Pamela", "lastName": "Arellano", "birthday": "2000-02-02", "grade": "4.5" },
+            { "firstName": "Carl", "lastName": "Salapar", "birthday": "1999-04-15", "grade": "4.0" },
+            { "firstName": "Anne", "lastName": "Salapar", "birthday": "1998-11-23", "grade": "5.0" }
         ];
 
         document.getElementById("studentForm").addEventListener("submit", function(e) {
-            e.preventDefault();
+            e.preventDefault(); // Prevent form submission
 
             const lastName = document.getElementById("lastName").value.trim();
             const firstName = document.getElementById("firstName").value.trim();
             const birthday = document.getElementById("birthday").value;
-
             const resultElement = document.getElementById("result");
 
+            // Clear previous result
+            resultElement.textContent = '';
+            resultElement.style.display = 'none';
+            resultElement.className = '';
+
             // Find student based on last name and birthday
-            const student = studentsData.find(s => 
-                s.lastName === lastName && s.birthday === birthday
+            const student = studentsData.find(
+                s => s.lastName === lastName && s.birthday === birthday
             );
 
             if (student) {
-                // Delay showing grade for 5 seconds
-                setTimeout(function() {
-                    // Check first name only if last name is 'Salapar'
+                setTimeout(() => {
                     if (lastName === "Salapar" && student.firstName !== firstName) {
                         resultElement.textContent = "First name doesn't match.";
                         resultElement.classList.add("error");
                     } else {
-                        // Display grade with different messages and colors based on the grade
                         let message = '';
                         let messageClass = '';
 
@@ -161,13 +142,14 @@
                         }
 
                         resultElement.textContent = message;
-                        resultElement.classList.remove("error", "warning", "success");
                         resultElement.classList.add(messageClass);
                     }
-                }, 5000); // 5-second delay before showing grade
+                    resultElement.style.display = 'block'; // Show result
+                }, 5000); // 5-second delay
             } else {
                 resultElement.textContent = "Student not found.";
                 resultElement.classList.add("error");
+                resultElement.style.display = 'block';
             }
         });
     </script>
