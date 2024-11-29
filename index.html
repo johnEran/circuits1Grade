@@ -1,12 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Lookup</title>
 </head>
 <body>
-  <h1>Welcome to My Website</h1>
-  <p>This is my first website deployed on Netlify!</p>
+    <h1>Enter Your Information</h1>
+    <form id="studentForm">
+        <input type="text" id="firstName" placeholder="First Name" required>
+        <input type="text" id="lastName" placeholder="Last Name" required>
+        <input type="date" id="birthday" placeholder="Birthday" required>
+        <button type="submit">Check Grade</button>
+    </form>
+    <p id="result"></p>
+
+    <script>
+        // Load the student data from the JSON file
+        const studentsData = [
+            {
+                "firstName": "Angelo",
+                "lastName": "Abaquita",
+                "birthday": "2000-01-01",
+                "grade": "85"
+            },
+            {
+                "firstName": "Pamela",
+                "lastName": "Arellano",
+                "birthday": "2000-02-02",
+                "grade": "90"
+            }
+        ];
+
+        // Handle form submission
+        document.getElementById("studentForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const firstName = document.getElementById("firstName").value;
+            const lastName = document.getElementById("lastName").value;
+            const birthday = document.getElementById("birthday").value;
+
+            // Find student from the data
+            const student = studentsData.find(s => 
+                s.firstName === firstName && 
+                s.lastName === lastName && 
+                s.birthday === birthday
+            );
+
+            // Display the result
+            const resultElement = document.getElementById("result");
+            if (student) {
+                resultElement.textContent = `Your grade is: ${student.grade}`;
+            } else {
+                resultElement.textContent = "Student not found.";
+            }
+        });
+    </script>
 </body>
 </html>
