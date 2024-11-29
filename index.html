@@ -4,19 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grade Lookup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-    <h1>Enter Your Information</h1>
-    <form id="studentForm">
-        <input type="text" id="firstName" placeholder="First Name" required>
-        <input type="text" id="lastName" placeholder="Last Name" required>
-        <input type="date" id="birthday" placeholder="Birthday" required>
-        <button type="submit">Check Grade</button>
-    </form>
-    <p id="result"></p>
+    <div class="container">
+        <h1>Enter Your Information</h1>
+        <form id="studentForm">
+            <input type="text" id="lastName" placeholder="Last Name" required>
+            <input type="text" id="firstName" placeholder="First Name" required>
+            <input type="date" id="birthday" placeholder="Birthday" required>
+            <button type="submit">Check Grade</button>
+        </form>
+        <p id="result"></p>
+    </div>
 
     <script>
-        // Load the student data from the JSON file
+        // Sample student data (could be replaced by an actual JSON or API call)
         const studentsData = [
             {
                 "firstName": "Angelo",
@@ -29,30 +93,47 @@
                 "lastName": "Arellano",
                 "birthday": "2000-02-02",
                 "grade": "90"
+            },
+            {
+                "firstName": "Carl",
+                "lastName": "Salapar",
+                "birthday": "1999-04-15",
+                "grade": "92"
+            },
+            {
+                "firstName": "Anne",
+                "lastName": "Salapar",
+                "birthday": "1998-11-23",
+                "grade": "89"
             }
         ];
 
-        // Handle form submission
         document.getElementById("studentForm").addEventListener("submit", function(e) {
             e.preventDefault();
 
-            const firstName = document.getElementById("firstName").value;
-            const lastName = document.getElementById("lastName").value;
+            const lastName = document.getElementById("lastName").value.trim();
+            const firstName = document.getElementById("firstName").value.trim();
             const birthday = document.getElementById("birthday").value;
 
-            // Find student from the data
+            // Find student based on last name and birthday
             const student = studentsData.find(s => 
-                s.firstName === firstName && 
-                s.lastName === lastName && 
-                s.birthday === birthday
+                s.lastName === lastName && s.birthday === birthday
             );
 
-            // Display the result
             const resultElement = document.getElementById("result");
+
             if (student) {
-                resultElement.textContent = `Your grade is: ${student.grade}`;
+                // Check first name if last name is 'Salapar'
+                if (lastName === "Salapar" && student.firstName !== firstName) {
+                    resultElement.textContent = "First name doesn't match.";
+                    resultElement.classList.add("error");
+                } else {
+                    resultElement.textContent = `Your grade is: ${student.grade}`;
+                    resultElement.classList.remove("error");
+                }
             } else {
                 resultElement.textContent = "Student not found.";
+                resultElement.classList.add("error");
             }
         });
     </script>
