@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade Lookup</title>
+    <title>Circuits1 Grade Checker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f7f7f7;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            box-sizing: border-box;
         }
 
         .container {
             background: #fff;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
             text-align: center;
@@ -29,21 +30,23 @@
         h1 {
             font-size: 24px;
             color: #333;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-weight: bold;
         }
 
         input {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 12px;
+            margin: 15px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
+            box-sizing: border-box;
         }
 
         button {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: none;
             background-color: #4CAF50;
             color: white;
@@ -59,17 +62,29 @@
         #result {
             margin-top: 20px;
             font-size: 18px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 5px;
             color: #333;
         }
 
         .error {
             color: red;
         }
+
+        .warning {
+            color: blue;
+        }
+
+        .success {
+            color: green;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Enter Your Information</h1>
+        <h1>Circuits1 Grade Checker</h1>
         <form id="studentForm">
             <input type="text" id="lastName" placeholder="Last Name" required>
             <input type="text" id="firstName" placeholder="First Name" required>
@@ -80,31 +95,31 @@
     </div>
 
     <script>
-        // Sample student data (could be replaced by an actual JSON or API call)
+        // Sample student data (replace with real data or an API call)
         const studentsData = [
             {
                 "firstName": "Angelo",
                 "lastName": "Abaquita",
                 "birthday": "2000-01-01",
-                "grade": "85"
+                "grade": "3.5"
             },
             {
                 "firstName": "Pamela",
                 "lastName": "Arellano",
                 "birthday": "2000-02-02",
-                "grade": "90"
+                "grade": "4.5"
             },
             {
                 "firstName": "Carl",
                 "lastName": "Salapar",
                 "birthday": "1999-04-15",
-                "grade": "92"
+                "grade": "4.0"
             },
             {
                 "firstName": "Anne",
                 "lastName": "Salapar",
                 "birthday": "1998-11-23",
-                "grade": "89"
+                "grade": "5.0"
             }
         ];
 
@@ -115,22 +130,41 @@
             const firstName = document.getElementById("firstName").value.trim();
             const birthday = document.getElementById("birthday").value;
 
+            const resultElement = document.getElementById("result");
+
             // Find student based on last name and birthday
             const student = studentsData.find(s => 
                 s.lastName === lastName && s.birthday === birthday
             );
 
-            const resultElement = document.getElementById("result");
-
             if (student) {
-                // Check first name if last name is 'Salapar'
-                if (lastName === "Salapar" && student.firstName !== firstName) {
-                    resultElement.textContent = "First name doesn't match.";
-                    resultElement.classList.add("error");
-                } else {
-                    resultElement.textContent = `Your grade is: ${student.grade}`;
-                    resultElement.classList.remove("error");
-                }
+                // Delay showing grade for 5 seconds
+                setTimeout(function() {
+                    // Check first name only if last name is 'Salapar'
+                    if (lastName === "Salapar" && student.firstName !== firstName) {
+                        resultElement.textContent = "First name doesn't match.";
+                        resultElement.classList.add("error");
+                    } else {
+                        // Display grade with different messages and colors based on the grade
+                        let message = '';
+                        let messageClass = '';
+
+                        if (student.grade == '4.0') {
+                            message = "Please prepare for a removal exam on Monday, December 2, 2024";
+                            messageClass = "warning";
+                        } else if (student.grade == '5.0') {
+                            message = "Apologies, but we'll be seeing again next year";
+                            messageClass = "error";
+                        } else if (parseFloat(student.grade) < 4.0) {
+                            message = `Congratulations! You passed the subject with a grade of ${student.grade}`;
+                            messageClass = "success";
+                        }
+
+                        resultElement.textContent = message;
+                        resultElement.classList.remove("error", "warning", "success");
+                        resultElement.classList.add(messageClass);
+                    }
+                }, 5000); // 5-second delay before showing grade
             } else {
                 resultElement.textContent = "Student not found.";
                 resultElement.classList.add("error");
